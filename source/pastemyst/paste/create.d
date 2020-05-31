@@ -16,7 +16,7 @@ public Paste createPaste(string title, string expiresIn, Pasty[] pasties, bool i
     import pastemyst.db : insert, findOneById;
     import pastemyst.data.paste : Paste;
     import pastemyst.data.file : languages;
-    import pastemyst.util : generateUniqueId;
+    import pastemyst.util : generateUniqueId, autodetectLang, getLangFromMime;
     import std.uni : toLower;
     import pastemyst.time : expiresInToUnixTime;
 
@@ -66,6 +66,18 @@ public Paste createPaste(string title, string expiresIn, Pasty[] pasties, bool i
     foreach (pasty; pasties)
     {
         pasty.id = generateUniquePastyId(paste);
+    }
+
+    foreach (pasty; pasties)
+    {
+        if (pasty.language == "Autodetect")
+        {
+            import std.stdio;
+            string langMime = autodetectLang(paste.id, pasty.id, pasty.code);
+            pasty.language = getLangFromMime(langMime);
+            writeln(langMime);
+        }
+
         paste.pasties ~= pasty;
     }
 
