@@ -497,6 +497,14 @@ public class PasteWeb
         render!("paste.dt", session, paste, previousRevision, currentEditId);
     }
 
+    @path("/:id/embed.js")
+    @noAuth
+    public void getPasteEmbed(string _id, HTTPServerResponse res)
+    {
+        res.contentType = "text/javascript";
+        res.writeBody("document.write('<p>:D</p>');");
+    }
+
     private Paste pasteRevision(string _pasteId, ulong _editId)
     {
         import pastemyst.db : findOneById;
